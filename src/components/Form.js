@@ -4,30 +4,40 @@ function Form() {
   const [formData, setFormData] = useState({
     firstName: "John",
     lastName: "Doe",
+    admin: false,
   });
   
 
-  function handleFirstNameChange(event) {
+  function handleChange(event) {
+    // this is dependent on name attributes of <input> matching keys in the state
+    // name is the KEY of the formData object we're trying to update
+
+    const name = event.target.name;
+    let value = event.target.value;
+
+    // use 'checked' property of checkboxes
+    // handling checkbox inputs
+    if(event.target.type === 'checkbox') {
+      value = event.target.checked;
+    }
+
     setFormData({
       ...formData,
-      firstName: event.target.value,
+      [name]: value,
     });
   }
 
-  function handleLastNameChange(event) {
-    setFormData({
-      // initial state is an object so...
-      // spread operator copies object from current version of formData object into the new state.
-      ...formData,
-      // overwriting lastName key with new value
-      lastName: event.target.value,
-    });
+  function handleSubmit(event) {
+    event.preventDefault();
+    console.log(formData);
   }
 
   return (
-    <form>
-      <input type="text" onChange={handleFirstNameChange} value={formData.firstName} />
-      <input type="text" onChange={handleLastNameChange} value={formData.lastName} />
+    <form onSubmit={handleSubmit}>
+      {/* giving inputs name attributes to access them as event.target.name */}
+      <input type="text" name="firstName" onChange={handleChange} value={formData.firstName} />
+      <input type="text" name="lastName" onChange={handleChange} value={formData.lastName} />
+      <input type="checkbox" name="admin" onChange={handleChange} checked={formData.admin} />
       <button type="submit">Submit</button>
     </form>
   );
